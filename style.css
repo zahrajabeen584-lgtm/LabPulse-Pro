@@ -3,15 +3,18 @@ body {
     color: #ffffff;
     font-family: sans-serif;
     padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
 }
 
 /* Light mode styles */
-body.light-mode { 
-    background-color: #f0f0f0 !important; 
-    color: #333 !important; 
+body.light-mode {
+    background-color: #f0f0f0 !important;
+    color: #333 !important;
 }
-body.light-mode .card { 
-    background: #d1d1d1 !important; 
+
+body.light-mode .card {
+    background: #d1d1d1 !important;
 }
 
 .card {
