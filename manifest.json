@@ -1,0 +1,8 @@
+{
+  "name": "LabPulse AI Pro",
+  "short_name": "LabPulse",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#2e0249",
+  "theme_color": "#2e0249"
+}
