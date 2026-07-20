@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LabPulse AI Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="">
+
+<div class="card">
+    <button onclick="document.body.classList.toggle('light-mode')">Toggle Theme</button>
+    <h1>🧬 LabPulse AI Pro</h1>
+
+    <h3>1. DNA to RNA</h3>
+    <input type="text" id="dna" placeholder="DNA sequence">
+    <button onclick="translateDNA()">Translate</button>
+    <button class="btn-clear" onclick="clearFields(['dna'], 'res-1')">Clear</button>
+    <div id="res-1" class="result-box"></div>
+
+    <h3>2. Molarity Calculator</h3>
+    <input type="number" id="mass" placeholder="Mass (g)">
+    <input type="number" id="mw" placeholder="Molecular Weight">
+    <button onclick="calcMolarity()">Calculate</button>
+    <button class="btn-clear" onclick="clearFields(['mass', 'mw'], 'res-2')">Clear</button>
+    <div id="res-2" class="result-box"></div>
+
+    <h3>3. Dilution (C1V1=C2V2)</h3>
+    <input type="number" id="c1" placeholder="C1">
+    <input type="number" id="v1" placeholder="V1">
+    <input type="number" id="c2" placeholder="C2">
+    <button onclick="calcDilution()">Calculate</button>
+    <button class="btn-clear" onclick="clearFields(['c1', 'v1', 'c2'], 'res-3')">Clear</button>
+    <div id="res-3" class="result-box"></div>
+
+    <h3>AI Troubleshooter</h3>
+    <textarea id="issue" placeholder="Describe lab issue..."></textarea>
+    <button onclick="fixIssue()">Analyze</button>
+    <button class="btn-clear" onclick="clearFields(['issue'], 'res-8')">Clear</button>
+    <div id="res-8" class="result-box"></div>
+
+    <hr>
+    <h3>History</h3>
+    <button onclick="displayHistory()">Show History</button>
+    <button class="btn-clear" onclick="clearHistory()">Clear History</button>
+    <div id="history-box" class="result-box"></div>
+</div>
+
+<script>
+    function validate(ids) {
+        for(let id of ids) { if(!document.getElementById(id).value) return false; }
+        return true;
+    }
+
+    function clearFields(ids, resId) {
+        ids.forEach(id => document.getElementById(id).value = "");
+        document.getElementById(resId).innerText = "";
+    }
+
+    function saveToHistory(text) {
+        let history = JSON.parse(localStorage.getItem('labHistory')) || [];
+        history.push(text);
+        localStorage.setItem('labHistory', JSON.stringify(history));
+    }
+
+    function displayHistory() {
+        let history = JSON.parse(localStorage.getItem('labHistory')) || [];
+        document.getElementById('history-box').innerText = history.join(' | ');
+    }
+
+    function clearHistory() {
+        localStorage.removeItem('labHistory');
+        document.getElementById('history-box').innerText = "";
+    }
+
+    function translateDNA() {
+        if(!validate(['dna'])) return;
+        let res = document.getElementById('dna').value.replace(/T/g, 'U');
+        document.getElementById('res-1').innerText = "RNA: " + res;
+        saveToHistory("DNA to RNA: " + res);
+    }
+
+    function calcMolarity() {
+        if(!validate(['mass', 'mw'])) return;
+        let res = (document.getElementById('mass').value / document.getElementById('mw').value).toFixed(2) + " M";
+        document.getElementById('res-2').innerText = "Molarity: " + res;
+        saveToHistory("Molarity: " + res);
+    }
+
+    function calcDilution() {
+        if(!validate(['c1', 'v1', 'c2'])) return;
+        let res = (document.getElementById('c1').value * document.getElementById('v1').value) / document.getElementById('c2').value;
+        document.getElementById('res-3').innerText = "V2: " + res;
+        saveToHistory("Dilution V2: " + res);
+    }
+
+    function fixIssue() {
+        if(!validate(['issue'])) return;
+        let issue = document.getElementById('issue').value.toLowerCase();
+        let response = "";
+        if(issue.includes("pcr")) response = "PCR issue? Check primers/settings.";
+        else if(issue.includes("molarity")) response = "Concentration low? Check calculations.";
+        else response = "AI Analysis: Review your protocol.";
+        document.getElementById('res-8').innerText = "AI Suggestion: " + response;
+    }
+</script>
+</body>
+</html>
